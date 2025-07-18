@@ -72,12 +72,42 @@ export const getOrderDetails = async (req, res, next) => {
 
 export const editOrder = async (req, res, next) => {
   try {
-    const { customerName, totalCost, items } = req.body;
+    const { customerName, totalCost, items, id } = req.body;
     if (!customerName || !totalCost || !items) {
       return res.status(400).send({
         message:
           "Send all required fields to update: CustomerName, Price, Items",
       });
     }
-  } catch (error) {}
+    for (const item of items) {
+      const { itemName } = item;
+      const id = item._id;
+      const quantity = Number(item.quantity);
+      const price = Number(item.price);
+
+      if (!itemName || quantity < 0 || price < 0) {
+        return res.status(400).send({ message: "Items name are not valid" });
+      }
+      const updatedItems = await findByIdAndUpdate(id, {
+        itemName,
+        quantity,
+        price,
+      });
+      await updatedItems.save();
+    }
+    const updatedOrder = await findByIdAndUpdate(id, {
+      customerName,
+      totalCost,
+      items,
+    });
+    await updatedOrder.save();
+    return res.status(200).send({
+      message: "Order updated successfully",
+      newOrder: updatedOrder,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      error: error.message,
+    });
+  }
 };
