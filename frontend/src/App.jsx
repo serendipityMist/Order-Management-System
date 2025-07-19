@@ -1,14 +1,6 @@
-import DynamicForm from "./Components/DynamicForm";
-import OrderForm from "./Pages/OrderForm";
-
+import { Outlet } from "react-router-dom";
 function App() {
-  return (
-    <>
-      <h1>Order Management System</h1>
-      {/* <OrderForm /> */}
-      <DynamicForm />
-    </>
-  );
+  return <Outlet />;
 }
 
 export default App;
