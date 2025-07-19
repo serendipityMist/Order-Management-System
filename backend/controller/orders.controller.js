@@ -2,21 +2,22 @@ import { Order } from "../model/orders.model.js";
 
 export const postAddOrder = async (req, res, next) => {
   try {
-    const { customerName, totalCost, items } = req.body;
-    if (!customerName || !totalCost || !items) {
+    const { customerName, items } = req.body;
+    if (!customerName || !items) {
       return res.status(400).send({
         message: "Send all required fields: CustomerName, Price, Items",
       });
     }
+    let totalCost = 0;
     let newItems = [];
     for (const item of items) {
       const { itemName } = item;
       const quantity = Number(item.quantity);
       const price = Number(item.price);
-
       if (!itemName || quantity < 0 || price < 0) {
         return res.status(400).send({ message: "Items name are not valid" });
       }
+      totalCost += quantity * price;
       newItems.push({ itemName, quantity, price });
     }
     const newOrder = new Order({
@@ -68,17 +69,18 @@ export const editOrder = async (req, res, next) => {
   console.log("REQ.PARAMS:", req.params);
 
   try {
-    const { customerName, totalCost, items } = req.body;
+    const { customerName, items } = req.body;
     const { id: orderId } = req.params;
     console.log(orderId);
-
-    if (!customerName || !totalCost || !items) {
+    let totalCost = 0;
+    let updated = [];
+    if (!customerName || !items) {
       return res.status(400).json({
         message:
           "Send all required fields to update: customerName, totalCost, items, id",
       });
     }
-    let updated = [];
+
     for (const item of items) {
       console.log(item);
 
@@ -87,7 +89,7 @@ export const editOrder = async (req, res, next) => {
       if (!itemName || quantity < 0 || price < 0) {
         return res.status(400).json({ message: "Invalid item data" });
       }
-
+      totalCost += quantity * price;
       updated.push({ itemName, quantity, price });
     }
 
