@@ -5,11 +5,22 @@ const orderSchema = new mongoose.Schema(
     customerName: {
       type: String,
       required: true,
+      unique: true,
     },
     items: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Item",
+        itemName: {
+          type: String,
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
       },
     ],
     totalCost: {

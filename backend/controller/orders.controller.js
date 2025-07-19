@@ -1,4 +1,3 @@
-import { Item } from "../model/items.models.js";
 import { Order } from "../model/orders.model.js";
 
 export const postAddOrder = async (req, res, next) => {
@@ -9,8 +8,7 @@ export const postAddOrder = async (req, res, next) => {
         message: "Send all required fields: CustomerName, Price, Items",
       });
     }
-    const itemsId = [];
-
+    let newItems = [];
     for (const item of items) {
       const { itemName } = item;
       const quantity = Number(item.quantity);
@@ -19,18 +17,12 @@ export const postAddOrder = async (req, res, next) => {
       if (!itemName || quantity < 0 || price < 0) {
         return res.status(400).send({ message: "Items name are not valid" });
       }
-      const newItems = new Item({
-        itemName,
-        quantity,
-        price,
-      });
-      await newItems.save();
-      itemsId.push(newItems._id);
+      newItems.push({ itemName, quantity, price });
     }
     const newOrder = new Order({
       customerName,
       totalCost,
-      items: itemsId,
+      items: newItems,
     });
     await newOrder.save();
     return res
@@ -71,39 +63,73 @@ export const getOrderDetails = async (req, res, next) => {
 };
 
 export const editOrder = async (req, res, next) => {
+  console.log("REQ.BODY:", req.body);
+  console.log("REQ.QUERY:", req.query);
+  console.log("REQ.PARAMS:", req.params);
+
   try {
-    const { customerName, totalCost, items, id } = req.body;
+    const { customerName, totalCost, items } = req.body;
+    const { id: orderId } = req.params;
+    console.log(orderId);
+
     if (!customerName || !totalCost || !items) {
-      return res.status(400).send({
+      return res.status(400).json({
         message:
-          "Send all required fields to update: CustomerName, Price, Items",
+          "Send all required fields to update: customerName, totalCost, items, id",
       });
     }
+    let updated = [];
     for (const item of items) {
-      const { itemName } = item;
-      const id = item._id;
-      const quantity = Number(item.quantity);
-      const price = Number(item.price);
+      console.log(item);
+
+      const { itemName, quantity, price } = item;
 
       if (!itemName || quantity < 0 || price < 0) {
-        return res.status(400).send({ message: "Items name are not valid" });
+        return res.status(400).json({ message: "Invalid item data" });
       }
-      const updatedItems = await findByIdAndUpdate(id, {
-        itemName,
-        quantity,
-        price,
-      });
-      await updatedItems.save();
+
+      updated.push({ itemName, quantity, price });
     }
-    const updatedOrder = await findByIdAndUpdate(id, {
-      customerName,
-      totalCost,
-      items,
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      {
+        customerName,
+        totalCost,
+        items: updated,
+      },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    return res.status(200).json({
+      message: "Order and items updated successfully",
+      order: updatedOrder,
     });
-    await updatedOrder.save();
+  } catch (error) {
+    console.error("Update error:", error.message);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+export const deleteOrderByID = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedOrder = await Order.findByIdAndDelete(id);
+    if (!deletedOrder) {
+      return res.status(500).send({
+        message: "Order not found",
+      });
+    }
+    console.log(deletedOrder);
+
     return res.status(200).send({
-      message: "Order updated successfully",
-      newOrder: updatedOrder,
+      message: "Order Deleted Sucessfully",
     });
   } catch (error) {
     return res.status(500).send({
