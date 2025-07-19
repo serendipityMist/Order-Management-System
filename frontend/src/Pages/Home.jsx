@@ -5,7 +5,6 @@ import axios from "axios";
 const Home = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [delLoading, setDelLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -35,6 +34,14 @@ const Home = () => {
       <h1 className="font-bold text-2xl text-black mb-4">
         Order Management System
       </h1>
+      <div className="flex justify-end mb-4 mr-5">
+        <Link
+          to={"/order/create"}
+          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300 font-semibold shadow-md"
+        >
+          Create Order
+        </Link>
+      </div>
 
       <div>
         {loading && (
@@ -86,6 +93,12 @@ const Home = () => {
                     </td>
 
                     <td className="px-4 py-2 font-semibold">
+                      <Link
+                        to={`/order/details/${order._id}`}
+                        className="px-4 py-2 bg-green-700 rounded-xl font-bold mx-1 text-white"
+                      >
+                        Details
+                      </Link>
                       <Link
                         to={`/order/edit/${order._id}`}
                         className="px-4 py-2 bg-blue-700 rounded-xl font-bold mx-1 text-white"
