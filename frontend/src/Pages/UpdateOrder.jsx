@@ -78,6 +78,7 @@ const UpdateOrder = () => {
             placeholder="Enter Customer Name"
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
+            required
           />
         </div>
 
@@ -97,6 +98,7 @@ const UpdateOrder = () => {
               placeholder="Item Name"
               value={item.itemName}
               onChange={(e) => handleItemChange(index, e)}
+              required
             />
             <input
               type="number"
@@ -106,6 +108,7 @@ const UpdateOrder = () => {
               placeholder="Quantity"
               value={item.quantity}
               onChange={(e) => handleItemChange(index, e)}
+              required
             />
             <input
               type="number"
@@ -114,6 +117,7 @@ const UpdateOrder = () => {
               placeholder="Price"
               value={item.price}
               onChange={(e) => handleItemChange(index, e)}
+              required
             />
             <div className="col-span-1 md:col-span-3 flex justify-end">
               {items.length > 1 && (
