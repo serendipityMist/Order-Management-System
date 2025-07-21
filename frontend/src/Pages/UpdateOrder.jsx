@@ -48,7 +48,7 @@ const UpdateOrder = () => {
     };
     axios
       .put(
-        `https://order-management-system-y958.onrender.com/${id}/edit`,
+        `https://order-management-system-y958.onrender.com/order/${id}/edit`,
         order
       )
       .then(() => {
