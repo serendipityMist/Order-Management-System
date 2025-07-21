@@ -33,10 +33,15 @@ const CreateOrder = () => {
         customerName,
         items,
       };
-      axios.post("http://localhost:4500/order/postOrder", order).then(() => {
-        console.log("Order Added Successfully");
-        navigate("/");
-      });
+      axios
+        .post(
+          "https://order-management-system-y958.onrender.com/order/postOrder",
+          order
+        )
+        .then(() => {
+          console.log("Order Added Successfully");
+          navigate("/");
+        });
     } catch (error) {
       console.log("You are getting this error", error);
     }

@@ -13,7 +13,7 @@ const UpdateOrder = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4500/order/${id}`)
+      .get(`https://order-management-system-y958.onrender.com/order/${id}`)
       .then((result) => {
         const order = result.data.order;
         setCustomerName(order.customerName);
@@ -47,7 +47,10 @@ const UpdateOrder = () => {
       items,
     };
     axios
-      .put(`http://localhost:4500/order/${id}/edit`, order)
+      .put(
+        `https://order-management-system-y958.onrender.com/${id}/edit`,
+        order
+      )
       .then(() => {
         console.log("Order Updated Successfully");
         navigate("/");

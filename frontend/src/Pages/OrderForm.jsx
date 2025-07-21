@@ -39,7 +39,6 @@ const OrderForm = () => {
       items,
     };
 
-    // 🔁 Replace with axios.post('/api/orders', order) if needed
     console.log("Submitting order:", order);
   };
 

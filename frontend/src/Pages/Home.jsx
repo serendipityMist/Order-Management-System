@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4500/order")
+      .get("https://order-management-system-y958.onrender.com/order")
       .then((result) => {
         setOrders(result.data.orderList || []);
         setLoading(false);

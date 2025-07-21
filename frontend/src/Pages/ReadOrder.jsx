@@ -11,7 +11,7 @@ const ReadOrder = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4500/order/${id}`)
+      .get(`https://order-management-system-y958.onrender.com/order/${id}`)
       .then((result) => {
         console.log(result.data.order);
         setOrderDetail(result.data.order);
